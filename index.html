@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f5f7f6" />
+    <meta name="description" content="EnRuta: pide un viaje fácil, rápido y seguro." />
+    <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>EnRuta — Tu próximo viaje</title>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="EnRuta, inicio">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32"><path d="M7 23.5 13.2 8h5.6L25 23.5h-5.3L16 13.3l-3.7 10.2H7Z"/><circle cx="23.5" cy="8.5" r="2.5"/></svg>
+          </span>
+          <span>en<span class="brand-highlight">ruta</span><span class="brand-period">.</span></span>
+        </a>
+        <button class="profile-button" id="profile-button" aria-label="Tu perfil">
+          <span class="profile-avatar">V</span>
+          <span class="profile-chevron" aria-hidden="true">⌄</span>
+        </button>
+      </header>
+
+      <section class="greeting" aria-labelledby="greeting-title">
+        <div>
+          <p class="eyebrow">MARTES, 15 DE NOVIEMBRE</p>
+          <h1 id="greeting-title">¿A dónde vamos?</h1>
+        </div>
+        <span class="greeting-sparkle" aria-hidden="true">✳</span>
+      </section>
+
+      <section class="map-card" aria-label="Vista previa del mapa">
+        <div class="map-grid" aria-hidden="true">
+          <svg class="map-art" viewBox="0 0 740 390" preserveAspectRatio="xMidYMid slice">
+            <path class="park-shape" d="M-20 24 126 0l44 94-53 72-112-2Zm541-28 139 37-30 106-105 8-65-74Zm-39 277 105-21 72 112-174 20-67-61Z"/>
+            <path class="minor-road" d="M-25 122 210 42l144 37 126-63 291 56M-20 288l142-42 125 35 142-72 129 9 250-92M78 410l44-164-5-111 100-93M240 411l-15-108 28-102-43-139M378 415l-13-105 39-98-28-126M533 411l-52-126 31-115-24-115M664 406l-37-96 30-129-25-91"/>
+            <path class="major-road" d="m-20 350 188-89 126-7 130-88 118 3 222-112M-30 69l176 57 155-13 111 57 139-11 184 76"/>
+            <path class="route-shadow" d="m87 284 140-53 94 13 107-73 98 18 105-59"/>
+            <path class="route-line" d="m87 284 140-53 94 13 107-73 98 18 105-59"/>
+            <circle class="route-start" cx="87" cy="284" r="7"/>
+            <circle class="route-end-ring" cx="631" cy="130" r="12"/>
+            <circle class="route-end" cx="631" cy="130" r="5"/>
+            <circle class="map-dot" cx="205" cy="168" r="3"/><circle class="map-dot" cx="462" cy="278" r="3"/><circle class="map-dot" cx="357" cy="92" r="3"/>
+          </svg>
+          <span class="map-label label-one">LAS MERCEDES</span>
+          <span class="map-label label-two">ALTAMIRA</span>
+          <span class="map-label label-three">CHACAO</span>
+          <span class="map-attribution">Vista previa del mapa</span>
+        </div>
+        <div class="map-chip"><span class="live-dot"></span> Mapa ilustrativo</div>
+        <button class="locate-button" id="locate-button" aria-label="Usar mi ubicación" title="Usar mi ubicación">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"/></svg>
+        </button>
+      </section>
+
+      <section class="booking-card" aria-labelledby="booking-title">
+        <div class="card-heading">
+          <div>
+            <p class="eyebrow">TU VIAJE, A TU MANERA</p>
+            <h2 id="booking-title">Arma tu ruta</h2>
+          </div>
+          <span class="step-badge">01 <span>/ 02</span></span>
+        </div>
+
+        <div class="route-fields">
+          <span class="route-track" aria-hidden="true"><i></i><i></i><i></i></span>
+          <label class="address-field">
+            <span class="field-label">PUNTO DE RECOGIDA</span>
+            <input id="pickup" type="text" autocomplete="street-address" placeholder="¿Dónde te buscamos?" maxlength="180" required />
+            <button type="button" class="field-action" id="pickup-location" aria-label="Usar ubicación actual" title="Usar ubicación actual">◎</button>
+          </label>
+          <div class="field-divider"></div>
+          <label class="address-field">
+            <span class="field-label">DESTINO</span>
+            <input id="destination" type="text" autocomplete="off" placeholder="¿A dónde quieres ir?" maxlength="180" required />
+            <span class="destination-marker" aria-hidden="true"></span>
+          </label>
+        </div>
+
+        <div class="section-title-row">
+          <h3>Elige tu viaje</h3>
+          <span class="arrival-note"><strong>2 opciones</strong></span>
+        </div>
+
+        <div class="ride-options" role="radiogroup" aria-label="Tipo de vehículo">
+          <button type="button" class="ride-option selected" data-ride="comfort" role="radio" aria-checked="true">
+            <span class="vehicle-icon" aria-hidden="true"><svg viewBox="0 0 48 32"><path d="m8 20 3-8c.7-2 2-3 4-3h17c2 0 3.5 1 4.5 3l4 8v7h-4v-3H12v3H8v-7Zm5-1h22l-2.6-6H15.2L13 19Zm1 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm19 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg></span>
+            <span class="ride-info"><strong>EnRuta</strong><small>4 pasajeros</small></span>
+            <span class="ride-price">$3.50</span>
+          </button>
+          <button type="button" class="ride-option" data-ride="moto" role="radio" aria-checked="false">
+            <span class="vehicle-icon moto-icon" aria-hidden="true"><svg viewBox="0 0 48 32"><path d="M14 23a6 6 0 1 1-12 0 6 6 0 0 1 12 0Zm32 0a6 6 0 1 1-12 0 6 6 0 0 1 12 0ZM8 23h7l8-12h9l5 8h-9l-5-4-7 10h-2a6 6 0 0 0-6-2Zm19-12h-5l-3-4h8l4 6h-4l-1-2Z"/></svg></span>
+            <span class="ride-info"><strong>Moto</strong><small>1 pasajero</small></span>
+            <span class="ride-price">$2.20</span>
+          </button>
+        </div>
+
+        <div class="fare-row">
+          <span><span class="fare-icon">↗</span> Precio estimado</span>
+          <strong id="fare">$3.50 <small>USD</small></strong>
+        </div>
+        <button class="request-button" id="request-ride" type="button">
+          <span>Solicitar viaje</span><span class="button-arrow" aria-hidden="true">→</span>
+        </button>
+        <p class="status-message" id="status-message" role="status" aria-live="polite"></p>
+        <p class="fine-print">El precio final puede variar según la ruta.</p>
+      </section>
+
+      <footer class="bottom-note"><span>Hecho para moverte</span><span class="footer-heart">♥</span><span>sin complicaciones</span></footer>
+    </main>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
