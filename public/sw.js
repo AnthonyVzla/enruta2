@@ -1,9 +1,11 @@
-const CACHE_NAME = 'enruta-shell-v1';
+const CACHE_NAME = 'enruta-shell-v2';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './icons/icon.svg'
+  './icons/icon.svg',
+  './icons/app-icon.png',
+  './branding/enruta2-logo.png'
 ];
 
 self.addEventListener('install', (event) => {
