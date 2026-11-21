@@ -26,6 +26,8 @@ const requestButton = document.querySelector('#request-ride');
 const fare = document.querySelector('#fare');
 const distance = document.querySelector('#distance');
 const mapElement = document.querySelector('#map-canvas');
+const clientTripCard = document.querySelector('#client-trip-card');
+const clientTripDetails = document.querySelector('#client-trip-details');
 const driverControls = document.querySelector('#driver-controls');
 const driverOnline = document.querySelector('#driver-online');
 const driversStatus = document.querySelector('#drivers-status');
@@ -67,6 +69,8 @@ let mapRouteCoordinates = null;
 let hasFittedRoute = false;
 let candidateRequestId = 0;
 let candidateTimer = null;
+let clientTripsTimer = null;
+let clientTripRequestId = 0;
 
 const driverPanel = createDriverPanel({
   supabase,
@@ -113,6 +117,76 @@ function setRouteMessage(message, type = '') {
 function setTripMessage(message, type = '') {
   statusMessage.textContent = message;
   statusMessage.className = `status-message ${type}`.trim();
+}
+
+async function refreshClientTrip() {
+  const user = currentUser;
+  if (!user || currentProfile?.role !== 'client') return;
+  const requestId = ++clientTripRequestId;
+  const recentDay = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  const { data: trip, error } = await supabase.from('trips')
+    .select('id, driver_id, pickup, destination, estimated_fare, status')
+    .eq('user_id', user.id)
+    .in('status', ['pending', 'accepted', 'in_progress', 'completed'])
+    .gte('created_at', recentDay)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (requestId !== clientTripRequestId || user !== currentUser || currentProfile?.role !== 'client') return;
+  if (error) {
+    clientTripCard.hidden = false;
+    clientTripDetails.textContent = `No se pudo consultar el seguimiento: ${error.message}`;
+    return;
+  }
+  if (!trip) {
+    clientTripCard.hidden = true;
+    return;
+  }
+
+  clientTripCard.hidden = false;
+  clientTripDetails.replaceChildren();
+  const route = document.createElement('strong');
+  route.textContent = `${trip.pickup} → ${trip.destination}`;
+  const status = document.createElement('p');
+  const statusLabels = {
+    pending: 'Solicitud enviada. Esperando que el conductor acepte.',
+    accepted: 'Conductor asignado. Tu viaje está listo para comenzar.',
+    in_progress: 'Tu viaje está en curso.',
+    completed: 'Viaje finalizado. Puedes pagar directamente al conductor.'
+  };
+  status.textContent = statusLabels[trip.status] || trip.status;
+  const price = document.createElement('p');
+  price.textContent = `Monto del servicio: $${Number(trip.estimated_fare).toFixed(2)} USD`;
+  clientTripDetails.append(route, status, price);
+
+  if (trip.status === 'pending') {
+    const waiting = document.createElement('p');
+    waiting.className = 'payment-note';
+    waiting.textContent = 'Los datos de Pago Móvil aparecerán cuando el conductor acepte el servicio.';
+    clientTripDetails.append(waiting);
+    return;
+  }
+  if (!trip.driver_id) return;
+
+  const { data: payment, error: paymentError } = await supabase.from('driver_payment_profiles')
+    .select('bank_name, phone_number, identity_number')
+    .eq('driver_id', trip.driver_id)
+    .maybeSingle();
+  if (requestId !== clientTripRequestId || user !== currentUser || currentProfile?.role !== 'client') return;
+  const paymentDetails = document.createElement('div');
+  paymentDetails.className = 'client-payment-details';
+  const heading = document.createElement('strong');
+  heading.textContent = 'Pago Móvil del conductor';
+  const detail = document.createElement('p');
+  if (paymentError) {
+    detail.textContent = `No se pudieron cargar los datos de pago: ${paymentError.message}`;
+  } else if (payment) {
+    detail.textContent = `Banco: ${payment.bank_name} · Teléfono: ${payment.phone_number} · C.I./RIF: ${payment.identity_number}`;
+  } else {
+    detail.textContent = 'El conductor aún no ha registrado sus datos de Pago Móvil. Coordina el pago directamente con él.';
+  }
+  paymentDetails.append(heading, detail);
+  clientTripDetails.append(paymentDetails);
 }
 
 function updateAuthMode() {
@@ -174,6 +248,9 @@ function clearRideState() {
 
 function showAuthScreen(message = '') {
   driverPanel.stop();
+  clearInterval(clientTripsTimer);
+  clientTripsTimer = null;
+  clientTripCard.hidden = true;
   authScreen.hidden = false;
   appShell.hidden = true;
   currentUser = null;
@@ -190,7 +267,8 @@ function displayProfile(profile) {
   document.querySelector('#greeting-title').textContent = isClient
     ? '¿A dónde vamos?'
     : `¡Hola, ${(profile.full_name || '').trim().split(/\s+/)[0] || 'bienvenido'}!`;
-  document.querySelector('.map-card').hidden = !isClient;
+  document.querySelector('#client-map-card').hidden = !isClient;
+  document.querySelector('#driver-map-card').hidden = profile.role !== 'driver';
   document.querySelector('#booking-card').hidden = !isClient;
   const rolePanel = document.querySelector('#role-panel');
   rolePanel.hidden = isClient;
@@ -229,6 +307,10 @@ async function loadProfile(user) {
   clearRideState();
   if (profile.role === 'driver') {
     void driverPanel.start();
+  } else if (profile.role === 'client') {
+    void refreshClientTrip();
+    clearInterval(clientTripsTimer);
+    clientTripsTimer = setInterval(() => void refreshClientTrip(), 15000);
   }
 }
 
@@ -391,7 +473,12 @@ async function initializeMap() {
       currentMap.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
       currentMap.on('load', renderMap);
       currentMap.on('error', (event) => {
-        if (event.error) showMapError(`No se pudo cargar el mapa: ${event.error.message}`);
+        if (!event.error) return;
+        const status = event.error.status || event.error.statusCode;
+        const message = status === 401
+          ? 'Mapbox rechazó el token (401). Genera un token público vigente y limita su dominio a anthonyvzla.github.io.'
+          : `No se pudo cargar el mapa: ${event.error.message}`;
+        showMapError(message);
       });
     } catch (error) {
       showMapError(`No se pudo inicializar Mapbox: ${error.message}`);
@@ -852,6 +939,7 @@ requestButton.addEventListener('click', async () => {
 
     tripSubmitted = true;
     setTripMessage(`Solicitud asignada a un conductor. Llegada estimada: ${assignedDriver.etaMinutes} min.`, 'success');
+    void refreshClientTrip();
     void refreshCandidates();
   } catch (error) {
     setTripMessage(`No pudimos enviar tu solicitud: ${error.message}`, 'error');

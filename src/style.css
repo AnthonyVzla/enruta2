@@ -53,22 +53,43 @@ button { color: inherit; }
 .driver-category { padding-top: 11px; border-top: 1px solid #eff2f0; }
 .driver-category strong { color: #236d4f; }
 .driver-controls { padding-top: 10px; }
+.driver-section-heading { margin-top: 15px; }
+.driver-map-card { height: 224px; }
+.heatmap-legend { position: absolute; right: 12px; bottom: 12px; z-index: 1; display: flex; align-items: center; gap: 7px; padding: 6px 8px; border: 1px solid #ffffffb0; border-radius: 20px; background: #ffffffeb; color: #536159; font-size: 8px; font-weight: 700; }
+.heatmap-legend i { width: 76px; height: 8px; border-radius: 8px; background: linear-gradient(90deg, #facc15, #f97316, #dc2626); }
+.navigation-preference { margin-top: 14px; }
 .online-control { display: flex; align-items: center; gap: 10px; padding: 12px; margin: 12px 0 16px; border: 1px solid #e5ece7; border-radius: 12px; background: #f8fbf8; color: #3c5145; font-size: 11px; font-weight: 700; cursor: pointer; }
 .online-control input { width: 17px; height: 17px; accent-color: #127653; }
 .assigned-trips { padding-top: 14px; border-top: 1px solid #eff2f0; }
 .assigned-trips h3 { margin-bottom: 10px; }
 .assigned-trip { padding: 11px; margin-bottom: 8px; border: 1px solid #e8eeea; border-radius: 11px; background: #fbfcfb; font-size: 10px; line-height: 1.5; }
 .assigned-trip strong { display: block; color: #33463b; }
+.trip-card-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.trip-card-actions button { min-height: 28px; }
+.empty-list, .payment-note { margin: 0; color: #89958d; font-size: 10px; line-height: 1.5; }
+.driver-payment-form { padding-top: 15px; margin-top: 15px; border-top: 1px solid #eff2f0; }
+.driver-payment-form h3 { margin-bottom: 6px; }
+.driver-payment-form .auth-field { margin-top: 12px; margin-bottom: 10px; }
+.payment-save-button { min-height: 40px; margin-top: 2px; font-size: 10px; }
+.client-trip-card { margin-top: 14px; }
+.client-trip-card h2 { margin-bottom: 12px; }
+.client-trip-details { color: #56645c; font-size: 11px; line-height: 1.55; }
+.client-trip-details p { margin-bottom: 5px; }
+.client-trip-details strong { display: block; margin-bottom: 4px; color: #33463b; }
+.client-payment-details { padding: 10px; margin-top: 10px; border-radius: 10px; background: #f4faf6; color: #526259; }
+.client-payment-details strong { color: #196c4c; }
 .greeting { margin: 25px 1px 17px; }
 .eyebrow { margin: 0 0 7px; color: #8d9992; font-size: 9px; font-weight: 800; letter-spacing: 1.15px; }
 h1, h2, h3, p { margin-top: 0; }
 h1 { margin-bottom: 0; font-family: Manrope, sans-serif; font-size: 25px; font-weight: 800; letter-spacing: -1.1px; }
 .greeting-sparkle { margin: 6px 6px 0 0; color: #e8ab57; font-size: 28px; }
 .map-card { position: relative; height: 196px; overflow: hidden; border-radius: 21px; background: #e6eee9; box-shadow: 0 5px 15px #1d382512; }
+#driver-map-card { height: 224px; }
 .map-canvas { position: absolute; inset: 0; background: #e6eee9; }
 .map-chip { z-index: 1; pointer-events: none; }
 .driver-map-marker { display: grid; min-width: 32px; height: 29px; place-items: center; padding: 0 7px; border: 2px solid #fff; border-radius: 14px 14px 14px 3px; background: #18795b; color: #fff; font-size: 9px; font-weight: 800; box-shadow: 0 2px 8px #173a2c40; transform: rotate(-45deg); }
 .driver-map-marker span { transform: rotate(45deg); }
+.driver-location-marker { min-width: 34px; border-radius: 18px; background: #176fcb; transform: none; }
 .map-error-message { position: absolute; right: 12px; bottom: 12px; left: 12px; z-index: 1; padding: 8px 10px; border-radius: 9px; background: #ffffffed; color: #58675e; font-size: 9px; }
 .map-grid { position: absolute; inset: 0; overflow: hidden; background-color: #e9f0eb; background-image: linear-gradient(33deg, transparent 47%, #d7e3da 48%, #d7e3da 49%, transparent 50%), linear-gradient(147deg, transparent 56%, #dce7df 57%, #dce7df 58%, transparent 59%); background-size: 130px 100px, 170px 125px; }
 .map-art { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -167,6 +188,7 @@ h3 { margin: 0; font-size: 12px; font-weight: 800; }
   .app-shell { padding-top: 26px; }
   .greeting { margin-top: 32px; }
   .map-card { height: 218px; }
+  #driver-map-card { height: 240px; }
 }
 @media (max-width: 360px) {
   .app-shell { width: min(100% - 28px, 430px); }

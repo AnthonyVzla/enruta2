@@ -104,14 +104,55 @@
             <span class="suggestions" id="driver-destination-suggestions" role="listbox" hidden></span>
           </label>
           <p class="route-status" id="driver-location-status" role="status" aria-live="polite">La ubicación solo se comparte mientras estás conectado y la app está abierta.</p>
+          <label class="auth-field navigation-preference">
+            <span>Mi navegación preferida</span>
+            <select id="driver-navigation-preference">
+              <option value="enruta">Mapa EnRuta2</option>
+              <option value="google-maps">Google Maps</option>
+            </select>
+          </label>
+          <div class="section-title-row driver-section-heading">
+            <h3>Demanda cerca de ti</h3>
+            <span class="arrival-note">Radio de 2 km · últimas 24 h</span>
+          </div>
+          <section class="map-card driver-map-card" id="driver-map-card" aria-label="Mapa de demanda para conductores">
+            <div class="map-canvas" id="driver-map-canvas"></div>
+            <div class="map-chip"><span class="live-dot"></span><span>Mapa de demanda</span></div>
+            <div class="heatmap-legend" aria-label="De menor a mayor demanda">
+              <span>Menos</span><i aria-hidden="true"></i><span>Más</span>
+            </div>
+          </section>
+          <p class="route-status" id="driver-map-status" role="status" aria-live="polite">Conéctate para ver la demanda y tu ruta.</p>
+          <div class="assigned-trips" id="available-trips">
+            <h3>Servicios disponibles</h3>
+            <div id="available-trip-list"></div>
+          </div>
           <div class="assigned-trips" id="assigned-trips" hidden>
             <h3>Viajes asignados</h3>
             <div id="assigned-trip-list"></div>
           </div>
+          <form class="driver-payment-form" id="driver-payment-form">
+            <h3>Mis datos de Pago Móvil</h3>
+            <p class="payment-note">El pasajero verá estos datos solo en un viaje asignado contigo.</p>
+            <label class="auth-field">
+              <span>Banco</span>
+              <input id="driver-payment-bank" type="text" autocomplete="off" maxlength="80" required />
+            </label>
+            <label class="auth-field">
+              <span>Teléfono afiliado</span>
+              <input id="driver-payment-phone" type="tel" autocomplete="tel" maxlength="20" required />
+            </label>
+            <label class="auth-field">
+              <span>Cédula o RIF afiliado</span>
+              <input id="driver-payment-identity" type="text" autocomplete="off" maxlength="24" required />
+            </label>
+            <button class="request-button payment-save-button" id="driver-payment-save" type="submit">Guardar datos de Pago Móvil</button>
+            <p class="route-status" id="driver-payment-status" role="status" aria-live="polite"></p>
+          </form>
         </div>
       </section>
 
-      <section class="map-card" aria-label="Vista previa del mapa">
+      <section class="map-card" id="client-map-card" aria-label="Vista previa del mapa">
         <div class="map-canvas" id="map-canvas"></div>
         <div class="map-chip"><span class="live-dot"></span><span id="map-chip-label">Mapa Enruta2</span></div>
         <button class="locate-button" id="locate-button" aria-label="Usar mi ubicación" title="Usar mi ubicación">
@@ -190,6 +231,11 @@
         </button>
         <p class="status-message" id="status-message" role="status" aria-live="polite"></p>
         <p class="fine-print">Express: carro $0.90/km · moto $0.40/km. Económica: carro $0.80/km · moto $0.35/km.</p>
+      </section>
+      <section class="booking-card client-trip-card" id="client-trip-card" aria-labelledby="client-trip-title" hidden>
+        <p class="eyebrow">SEGUIMIENTO DEL SERVICIO</p>
+        <h2 id="client-trip-title">Tu viaje</h2>
+        <div class="client-trip-details" id="client-trip-details"></div>
       </section>
 
       <footer class="bottom-note"><span>Hecho para moverte</span><span class="footer-heart">♥</span><span>sin complicaciones</span></footer>
